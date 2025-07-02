@@ -1,9 +1,9 @@
-### Cancel trade orders using Alpaca API.
+### Cancel the open trade orders, using the Alpaca SDK.
+# https://alpaca.markets/sdks/python/trading.html
 
 import pandas as pd
 from datetime import date, datetime
-import pandas as pd
-import alpaca_trade_api as tradeapi
+from zoneinfo import ZoneInfo
 from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import GetOrdersRequest
 from alpaca.trading.enums import QueryOrderStatus
@@ -16,12 +16,8 @@ load_dotenv("/Users/jerzy/Develop/Python/.env")
 TRADE_KEY = os.getenv("TRADE_KEY")
 TRADE_SECRET = os.getenv("TRADE_SECRET")
 
+# Create the SDK trading client
 trading_client = TradingClient(TRADE_KEY, TRADE_SECRET)
-
-BASE_URL = "https://paper-api.alpaca.markets"
-
-# data_client = StockHistoricalDataClient(DATA_KEY, DATA_SECRET)
-trade_api = tradeapi.REST(TRADE_KEY, TRADE_SECRET, BASE_URL, api_version="v2")
 
 
 # Get all open orders
@@ -33,31 +29,50 @@ orders = trading_client.get_orders(filter=GetOrdersRequest(status=QueryOrderStat
 # Cancel the order using the order_id
 # trade_api.cancel_order(order_id)
 
+# Cancel all open orders
+canceled_orders = trading_client.cancel_orders()
+# len(canceled_orders)
+# Convert the list to a data frame
+canceled_orders = pd.DataFrame([order.model_dump() for order in canceled_orders])
+
+# Save canceled orders to CSV file
+time_ny = datetime.now(ZoneInfo("America/New_York"))
+date_today = time_ny.strftime("%Y%m%d")
+filename = "/Users/jerzy/Develop/MachineTrader/Internship_Summer_2025/data/canceled_orders_" + date_today + ".csv"
+# Append to CSV (write header only if file does not exist)
+canceled_orders.to_csv(filename, mode="a", header=not os.path.exists(filename), index=False)
+print("Finished cancelling orders and saved to canceled_orders.csv")
+
+
+'''
+# Old code
+# This code to cancel a single order doesn't work: trading_client.cancel_orders(order_id)
 # Cancel all open orders in a loop
 if (len(orders) > 0):
     # Create empty data frame of cancelled orders
-    cancelled_orders = pd.DataFrame(columns=["date", "timestamp", "order_id"])
+    canceled_orders = pd.DataFrame(columns=["date", "timestamp", "order_id"])
     # Cancel all open orders in a loop
     for order in orders:
-        order_id = order.id
-        trade_api.cancel_order(order_id)
+        order_id = str(order.id)
+        trading_client.cancel_orders(order_id)
         date_now = datetime.now()
         time_stamp = date_now.timestamp()
-        cancelled_orders.loc[len(cancelled_orders)] = [date_now, time_stamp, order_id]
+        canceled_orders.loc[len(canceled_orders)] = [date_now, time_stamp, order_id]
         print(f"Cancelled order {order_id} at {date_now}")
     # Save cancelled orders to CSV file
-    # current_time = time.localtime()
-    # file_name = "/Users/jerzy/Develop/Python/cancelled_orders_" + time.strftime("%Y%m%d", current_time) + ".csv"
-    current_time = datetime.now()
-    file_name = "/Users/jerzy/Develop/MachineTrader/Internship_Summer_2025/data/cancelled_orders_" + current_time.strftime("%Y%m%d") + ".csv"
-    cancelled_orders.to_csv(file_name, index=False)
-    print("Finished cancelling orders and saved to cancelled_orders.csv")
+    # date_today = time.localtime()
+    # filename = "/Users/jerzy/Develop/Python/canceled_orders_" + time.strftime("%Y%m%d", date_today) + ".csv"
+    date_today = datetime.now()
+    date_today = date_today.strftime("%Y%m%d")
+    filename = "/Users/jerzy/Develop/MachineTrader/Internship_Summer_2025/data/canceled_orders_" + date_today + ".csv"
+    canceled_orders.to_csv(filename, index=False)
+    print("Finished cancelling orders and saved to canceled_orders.csv")
 else:
     print("No open orders found. Exiting script.")
 
 
-### Alternative way to cancel an order using requests the Alpaca API
-### Example of how to cancel an order using requests the Alpaca API
+### Alternative way to cancel an order using requests and the Alpaca endpoint
+### Example of how to cancel an order using requests and the Alpaca endpoint
 # import requests
 # # Get account details
 # account = trade_api.get_account()
@@ -77,3 +92,5 @@ else:
 # print(response)
 # # print(response.status_code)
 # # print(response.text)
+
+'''

@@ -1,5 +1,7 @@
-### Get all open positions in Alpaca account using Alpaca API.
+### Get the positions from Alpaca, with the available shares to trade, using the Alpaca SDK.
+# https://docs.alpaca.markets/reference/getallopenpositions
 
+# import requests
 import pandas as pd
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
@@ -7,15 +9,13 @@ from alpaca.trading.client import TradingClient
 from dotenv import load_dotenv
 import os
 
-# Load environment variables from .env file
+# Load trade keys (not data keys) from .env file
 load_dotenv("/Users/jerzy/Develop/Python/.env")
-# Trade keys
 TRADE_KEY = os.getenv("TRADE_KEY")
 TRADE_SECRET = os.getenv("TRADE_SECRET")
 
 # Create the SDK trading client
 trading_client = TradingClient(TRADE_KEY, TRADE_SECRET)
-
 
 # Get all the open positions using the trading client
 portfolio = trading_client.get_all_positions()
@@ -24,26 +24,10 @@ portfolio = trading_client.get_all_positions()
 
 # Loop through the portfolio and print each position's details
 for position in portfolio:
-    print(f"Symbol: {position.symbol}, Side: {position.side}, Qty: {position.qty}, Qty: {position.qty_available}, Unreal_PnL: {position.unrealized_pl}")
+    print(f"Symbol: {position.symbol}, Side: {position.side}, Qty: {position.qty}, QtyAvail: {position.qty_available}, Unreal_PnL: {position.unrealized_pl}")
 #     # Define the request parameters
 # Extract 'qty' as an integer from the first position
 #qty = int(portfolio[0]['qty'])
-
-
-# Convert the list to a data frame
-position_frame = pd.DataFrame([position.model_dump() for position in portfolio])
-
-# Save canceled orders to CSV file
-time_ny = datetime.now(ZoneInfo("America/New_York"))
-date_today = time_ny.strftime("%Y%m%d")
-filename = "/Users/jerzy/Develop/MachineTrader/Internship_Summer_2025/data/positions_" + date_today + ".csv"
-# Append to CSV (write header only if file does not exist)
-position_frame.to_csv(filename, mode="a", header=not os.path.exists(filename), index=False)
-print("Saved positions to: " + filename)
-
-
-'''
-### Code for getting the first position's quantity and printing its details
 
 # Access the first position's quantity
 position = portfolio[0]  # Get the first position
@@ -68,4 +52,40 @@ date_today = time_ny.strftime("%Y%m%d")
 filename = "/Users/jerzy/Develop/MachineTrader/Internship_Summer_2025/data/positions_" + date_today + ".csv"
 position_frame.to_csv(filename, index=False)
 print("Finished getting positions and saving to CSV file")
-'''
+
+
+''' 
+
+### Alternative way to get the positions using requests
+# Get the positions from Alpaca, with the available shares to trade.
+# Define Alpaca API request parameters
+headers = {
+    "APCA-API-KEY-ID": TRADE_KEY,
+    "APCA-API-SECRET-KEY": TRADE_SECRET
+}
+url = "https://paper-api.alpaca.markets/v2/positions"
+
+# Submit the request to get the positions from the Alpaca endpoint
+response = requests.get(url, headers=headers)
+
+# Parse the response into json format
+positions = response.json()
+
+# Check if positions are not empty
+if not positions:
+    print("No open positions found.")
+else:
+    positions = positions[0]
+    for key, value in positions.items():
+        print(f"{key}: {value}")
+    # Extract the quantity available for trading
+    qty_available = int(positions["qty_available"])
+# print(response.text)
+response = response.json()[0]
+# type(response)
+
+# Extract the quantity available for trading
+int(response["qty_available"])
+
+''' 
+
