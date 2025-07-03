@@ -27,7 +27,8 @@ async def handle_trade(trade):
 
 async def handle_bar(bar):
     print(f"Bar: {bar}")
-
+    print(f"Symbol: {bar.symbol}, Open: {bar.open}, High: {bar.high}, Low: {bar.low}, Close: {bar.close}, Volume: {bar.volume}, Trade_count: {bar.trade_count}, VWAP: {bar.vwap}")
+    
 # Subscribe to updates
 # data_client.subscribe_quotes(handle_quote, symbol)
 # data_client.subscribe_trades(handle_trade, symbol)

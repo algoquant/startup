@@ -30,7 +30,7 @@ trading_client = TradingClient(TRADE_KEY, TRADE_SECRET)
 
 # Define the trading parameters
 symbol = "SPY"
-qty = 1  # Example quantity, adjust as needed
+qty = 1  # Number of shares
 # type = "market"
 type = "limit"
 side = OrderSide.BUY  # Set to BUY or SELL as needed
@@ -51,16 +51,15 @@ if type == "market":
     ) # end order_params
     print(f"Submitting a {type} {side} order for {qty} shares of {symbol}")
 elif type == "limit":
-    # Submit limit order
+    # Get the limit order price based on the latest bid/ask prices
     # Create the SDK data client for live and historical stock data
     data_client = StockHistoricalDataClient(DATA_KEY, DATA_SECRET)
     # Create the request parameters for live stock prices - SIP for comprehensive data, or IEX for free data.
     quote_params = StockLatestQuoteRequest(symbol_or_symbols=symbol, feed=DataFeed.SIP)
     # Get the latest quotes - as a dictionary
     latest_quotes = data_client.get_stock_latest_quote(quote_params)
-    # Get the price quote
-    price_quotes = latest_quotes[symbol]
     # Get the latest bid/ask prices
+    price_quotes = latest_quotes[symbol]
     ask_price = price_quotes.ask_price
     bid_price = price_quotes.bid_price
     print(f"Latest quotes for {symbol}: Ask = {price_quotes.ask_price}, Bid = {price_quotes.bid_price}")
@@ -70,6 +69,7 @@ elif type == "limit":
     elif side == OrderSide.SELL:
         # Submit a limit order to sell at the current bid price plus a small adjustment
         limit_price = round(bid_price + delta, 2)
+    # Define the limit order parameters
     order_params = LimitOrderRequest(
         symbol = symbol,
         qty = qty,
