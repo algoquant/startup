@@ -38,7 +38,7 @@ from utils import get_position, cancel_orders, submit_trade
 # --------- Create the SDK clients --------
 
 # Load the API keys from .env file
-load_dotenv("/Users/jerzy/Develop/Python/.env")
+load_dotenv(".env")
 # Data keys
 DATA_KEY = os.getenv("DATA_KEY")
 DATA_SECRET = os.getenv("DATA_SECRET")
@@ -101,7 +101,7 @@ pnl_unreal = 0  # The unrealized PnL of the strategy
 tzone = ZoneInfo("America/New_York")
 time_now = datetime.now(tzone)
 date_short = time_now.strftime("%Y%m%d")
-dir_name = "/Users/jerzy/Develop/data/strategies/"
+dir_name = os.getenv("data_dir_name")
 # Create file name for the state variables
 state_file = f"{dir_name}" + "state_" + f"{strategy_name}_{symbol}_{date_short}.csv"
 # Create file name for the submitted trade orders

@@ -1,4 +1,4 @@
-# Streams real-time stock bar prices for a single symbol via the Alpaca websocket API, and saves them to a CSV file.
+### Streams real-time stock bar prices for a single symbol via the Alpaca websocket API, and saves them to a CSV file.
 # https://wire.insiderfinance.io/alpaca-algorithmic-trading-api-in-python-part-1-getting-started-with-paper-trading-efbff8992836
 
 # You can run this script in the terminal as follows:
@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 # --------- Create the SDK clients --------
 
 # Load the API keys from .env file
-load_dotenv("/Users/jerzy/Develop/Python/.env")
+load_dotenv(".env")
 # Data keys
 DATA_KEY = os.getenv("DATA_KEY")
 DATA_SECRET = os.getenv("DATA_SECRET")
@@ -46,7 +46,7 @@ print(f"This script Streams real-time stock bar prices for {symbol} via the Alpa
 tzone = ZoneInfo("America/New_York")
 time_now = datetime.now(tzone)
 date_short = time_now.strftime("%Y%m%d")
-dir_name = "/Users/jerzy/Develop/data/strategies/"
+dir_name = os.getenv("data_dir_name")
 file_name = f"{dir_name}price_bars_{symbol}_{date_short}.csv"
 
 

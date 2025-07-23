@@ -81,7 +81,7 @@ def read_csv(filename):
 ## Download OHLC time series from Polygon
 
 # Load the API keys from .env file
-load_dotenv("/Users/jerzy/Develop/Python/.env")
+load_dotenv(".env")
 # Get the Polygon key
 POLYGON_KEY = os.getenv("POLYGON_KEY")
 

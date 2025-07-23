@@ -1,4 +1,4 @@
-# Stream real-time stock price bars for multiple symbols, via the Alpaca websocket API.
+### Stream real-time stock price bars for multiple symbols, via the Alpaca websocket API.
 # Save the price bars to CSV files, one for each symbol.
 # 
 # https://wire.insiderfinance.io/alpaca-algorithmic-trading-api-in-python-part-1-getting-started-with-paper-trading-efbff8992836
@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 # --------- Create the SDK clients --------
 
 # Load the API keys from .env file
-load_dotenv("/Users/jerzy/Develop/Python/.env")
+load_dotenv(".env")
 # Data keys
 DATA_KEY = os.getenv("DATA_KEY")
 DATA_SECRET = os.getenv("DATA_SECRET")
@@ -50,7 +50,7 @@ time_now = datetime.now(tzone)
 date_short = time_now.strftime("%Y%m%d")
 
 # Create a dictionary with file names for each symbol
-dir_name = "/Users/jerzy/Develop/data/strategies/"
+dir_name = os.getenv("data_dir_name")
 file_dict = {
     symbol: f"{dir_name}price_bars_{symbol}_{date_short}.csv"
     for symbol in symbols

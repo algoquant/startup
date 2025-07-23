@@ -34,7 +34,7 @@ from utils import convert_to_nytzone
 # --------- Create the SDK clients --------
 
 # Load the API keys from .env file
-load_dotenv("/Users/jerzy/Develop/Python/.env")
+load_dotenv(".env")
 # Data keys
 DATA_KEY = os.getenv("DATA_KEY")
 DATA_SECRET = os.getenv("DATA_SECRET")
@@ -98,7 +98,7 @@ tzone = ZoneInfo("America/New_York")
 time_now = datetime.now(tzone)
 date_today = time_now.strftime("%Y-%m-%d")
 date_short = time_now.strftime("%Y%m%d")
-dir_name = "/Users/jerzy/Develop/data/strategies/"
+dir_name = os.getenv("data_dir_name")
 submits_file = f"{dir_name}submits_{date_short}.csv"
 fills_file = f"{dir_name}fills_{symbol}_{date_short}.csv"
 # Create file name for the websocket errors

@@ -1,4 +1,4 @@
-# Aggregates the streaming real-time stock price ticks from the Alpaca websocket into 1-second bar prices.
+### Aggregates the streaming real-time stock price ticks from the Alpaca websocket into 1-second bar prices.
 # Calculates the volume weighted EMA prices and variance from the streaming real-time tick stock prices.
 # Saves the bar prices to a CSV file and plots the EMA prices with Bollinger Bands.
 
@@ -26,7 +26,7 @@ import signal
 # --------- Create the SDK clients --------
 
 # Load the API keys from .env file
-load_dotenv("/Users/jerzy/Develop/Python/.env")
+load_dotenv(".env")
 # Data keys
 DATA_KEY = os.getenv("DATA_KEY")
 DATA_SECRET = os.getenv("DATA_SECRET")
@@ -91,7 +91,7 @@ print(f"Latest bar prices: {bar_prices['open']}, High: {bar_prices['high']}, Low
 time_now = datetime.now(tzone)
 date_today = time_now.strftime("%Y-%m-%d")
 date_short = time_now.strftime("%Y%m%d")
-dir_name = "/Users/jerzy/Develop/data/strategies/"
+dir_name = os.getenv("data_dir_name")
 # Create file name for the state variables
 data_file = f"{dir_name}prices_EMA_{symbol}_{date_short}.csv"
 # Create file name for the websocket errors

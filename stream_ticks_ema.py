@@ -1,4 +1,4 @@
-# Calculates the volume weighted EMA prices and variance from the streaming real-time tick stock prices from the Alpaca websocket.
+### Calculates the volume weighted EMA prices and variance from the streaming real-time tick stock prices from the Alpaca websocket.
 # Saves the tick prices to a CSV file and plots the EMA prices with Bollinger Bands.
 
 import os
@@ -21,7 +21,7 @@ from dotenv import load_dotenv
 # --------- Create the SDK clients --------
 
 # Load API keys from .env file
-load_dotenv("/Users/jerzy/Develop/Python/.env")
+load_dotenv(".env")
 # Data keys
 DATA_KEY = os.getenv("DATA_KEY")
 DATA_SECRET = os.getenv("DATA_SECRET")
@@ -83,7 +83,7 @@ print(f"Latest bar prices: {bar_prices['open']}, High: {bar_prices['high']}, Low
 time_now = datetime.now(tzone)
 date_short = time_now.strftime("%Y-%m-%d")
 date_short = time_now.strftime("%Y%m%d")
-dir_name = "/Users/jerzy/Develop/data/strategies/"
+dir_name = os.getenv("data_dir_name")
 # Create file name for the state variables
 data_file = f"{dir_name}prices_EMA_{symbol}_{date_short}.csv"
 # Create file name for the websocket errors
